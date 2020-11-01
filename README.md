@@ -6,8 +6,8 @@ You will build analytics system that would present usage analytics about a websi
 
 ## Getting Started
 
-Clone this repo and build your project on top of it.  
-
+Clone this repo and build your project on top of it.   
+you can use `npm run init` __in the project root__ to download both the client and server dependencies, or :   
 - Setup server  
     1. `cd server`  
     3. `npm i` 
@@ -23,7 +23,7 @@ Clone this repo and build your project on top of it.
   
 ### Other useful commands:
 - /server
-    - `npm run db:seed` - reseed the database (does not affect tests.) you can determine different parameters in [.env](server/.env). Useful in case the existing data is has very old dates and you want newer entries. 
+    - `npm run db:seed` - reseed the database (does not affect tests.) you can determine different parameters in [.env](server/.env). Useful in case the existing data is has very old dates and you want newer entries, or add properties you want to the data.
 
 ## Admin Page Requirements:
 
@@ -99,6 +99,7 @@ note- the repo uses 'husky' and you might find you can't push to github while th
 ## Bonuses
   - Make your own custom tiles.
   - Make the tiles resizable.
+  - Creating piece of code that send events from clients to the server and save it.
   - Add an option to change chart type (pie | bars | line) in the same tile 
   - Make the tiles move by drag and drop.
   - Make the time-frame adjustable on all charts
