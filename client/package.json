@@ -55,6 +55,7 @@
     "json": "10.0.0",
     "lowdb": "^1.0.0",
     "ncp": "2.0.0",
+    "re-resizable": "^6.7.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-infinite-calendar": "2.3.1",
