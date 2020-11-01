@@ -25,6 +25,7 @@ import { isWithinInterval } from "date-fns";
 import low from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
 import shortid from "shortid";
+import { dateString } from "./event-routes";
 import {
   BankAccount,
   Transaction,
@@ -49,7 +50,7 @@ import {
   NotificationResponseItem,
   TransactionQueryPayload,
   DefaultPrivacyLevel,
-  Event
+  Event,
 } from "../../client/src/models";
 import Fuse from "fuse.js";
 import {
@@ -69,7 +70,6 @@ import {
   isCommentNotification,
 } from "../../client/src/utils/transactionUtils";
 import { DbSchema } from "../../client/src/models/db-schema";
-
 
 export type TDatabase = {
   users: User[];
@@ -107,6 +107,23 @@ export const seedDatabase = () => {
   db.setState(testSeed).write();
   return;
 };
+
+export const getAllEvents = () => db.get(EVENT_TABLE).value();
+
+export const createNewEvent = (event: Event) => {
+  db.get(EVENT_TABLE).push(event).write();
+};
+
+export const getAllSessionsByDateAndHour = (date: number, hour: number): string[] =>
+  db
+    .get(EVENT_TABLE)
+    .value()
+    .filter((event: Event) => {
+      return (
+        dateString(event.date) === dateString(date) && new Date(event.date).getHours() === hour
+      );
+    })
+    .map((event: Event) => event.session_id);
 
 export const getAllUsers = () => db.get(USER_TABLE).value();
 
@@ -862,6 +879,5 @@ export const getTransactionsBy = (key: string, value: string) =>
 
 /* istanbul ignore next */
 export const getTransactionsByUserId = (userId: string) => getTransactionsBy("receiverId", userId);
-
 
 export default db;
