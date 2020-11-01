@@ -62,7 +62,7 @@ export const commentsPerUser = +process.env.SEED_COMMENTS_PER_USER!;
 export const notificationsPerUser = +process.env.SEED_NOTIFICATIONS_PER_USER!;
 export const bankTransfersPerUser = +process.env.SEED_BANK_TRANSFERS_PER_USER!;
 export const defaultPassword = process.env.SEED_DEFAULT_USER_PASSWORD!;
-export const dayZero = process.env.SEED_DAY_ZERO;
+export const dayZero = +process.env.SEED_DAY_ZERO;
 
 export const paymentVariations = 2;
 export const requestVariations = 3;
@@ -163,9 +163,9 @@ const randomUrl = () => {
   return types[randomNumber];
 };
 
-export const createFakeEvent = (signups:Event[]): Event => {
+export const createFakeEvent = (signups: Event[]): Event => {
   const _id = shortid();
-  let randomUserIndex:number = Math.round(Math.random()*(signups.length-1))
+  let randomUserIndex: number = Math.round(Math.random() * (signups.length - 1));
   return {
     _id,
     session_id: faker.random.uuid(),
@@ -184,7 +184,7 @@ export const createFakeEvent = (signups:Event[]): Event => {
     url: `http://localhost3000/${randomUrl()}`,
   };
 };
-export const createFakeSignup = (user:User): Event => {
+export const createFakeSignup = (user: User): Event => {
   const _id = shortid();
   return {
     _id,
@@ -201,18 +201,18 @@ export const createFakeSignup = (user:User): Event => {
       },
       accuracy: faker.random.number({ min: 10, max: 2000 }),
     },
-    url: 'http://localhost3000/signup',
+    url: "http://localhost3000/signup",
   };
 };
 
 // @ts-ignore
 export const createSeedUsers = () => times(() => createFakeUser(), userbaseSize);
 
-export const createSeedEvents = (users:User[]) =>{
+export const createSeedEvents = (users: User[]) => {
   const signups = users.map((user) => createFakeSignup(user));
   const events = times(() => createFakeEvent(signups), eventsCount);
-  return signups.concat(events)
-}
+  return signups.concat(events);
+};
 
 export const createContact = (userId: User["id"], contactUserId: User["id"]) => ({
   id: shortid(),
