@@ -139,6 +139,7 @@ export const getReturningUsersAmountInWeekInPercent = (
       (event: Event) => event.date >= startDate && event.date < endDate && event.name === "login"
     )
     .map((event: Event) => event.distinct_user_id);
+
   usersIds = Array.from(new Set(usersIds));
   let count: number = 0;
   for (let i = 0; i < users.length; i++) {

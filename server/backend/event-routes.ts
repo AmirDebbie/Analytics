@@ -188,14 +188,29 @@ router.get("/retention", (req: Request, res: Response) => {
     };
     return weekObj;
   };
-
+  let check = false;
   while (startingDate < currentDate) {
+    if (
+      new Date(startingDate + daysToMiliSeconds(7)).getDate() >= 25 &&
+      !check &&
+      new Date(startingDate + daysToMiliSeconds(7)).getMonth() === 9
+    ) {
+      check = true;
+      startingDate += +3600000;
+    }
     retentionCohort.push(getOneWeek(startingDate, weekNumber));
-    startingDate += daysToMiliSeconds(7);
+    if (
+      new Date(startingDate).getDate() <= 25 &&
+      !check &&
+      new Date(startingDate + daysToMiliSeconds(7)).getDate() >= 25
+    ) {
+      check = true;
+      startingDate += daysToMiliSeconds(7) + 3600000;
+    } else {
+      startingDate += daysToMiliSeconds(7);
+    }
     weekNumber++;
   }
-
-  console.log(retentionCohort);
 
   res.json(retentionCohort);
 });
