@@ -127,6 +127,28 @@ export const getAllSessionsByDateAndHour = (date: number, hour: number): string[
 
 export const getAllUsers = () => db.get(USER_TABLE).value();
 
+export const getReturningUsersAmountInWeekInPercent = (
+  startDate: number,
+  endDate: number,
+  users: string[]
+): number => {
+  let usersIds: string[] = db
+    .get(EVENT_TABLE)
+    .value()
+    .filter(
+      (event: Event) => event.date >= startDate && event.date < endDate && event.name === "login"
+    )
+    .map((event: Event) => event.distinct_user_id);
+  usersIds = Array.from(new Set(usersIds));
+  let count: number = 0;
+  for (let i = 0; i < users.length; i++) {
+    if (usersIds.find((id: string) => id === users[i])) {
+      count++;
+    }
+  }
+  return Math.round((100 * count) / users.length);
+};
+
 export const getAllPublicTransactions = () =>
   db.get(TRANSACTION_TABLE).filter({ privacyLevel: DefaultPrivacyLevel.public }).value();
 

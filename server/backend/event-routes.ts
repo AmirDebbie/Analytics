@@ -4,7 +4,12 @@ import express from "express";
 import { Request, Response } from "express";
 
 // some useful database functions in here:
-import { getAllEvents, createNewEvent, getAllSessionsByDateAndHour } from "./database";
+import {
+  getAllEvents,
+  createNewEvent,
+  getAllSessionsByDateAndHour,
+  getReturningUsersAmountInWeekInPercent,
+} from "./database";
 import { Event, weeklyRetentionObject } from "../../client/src/models/event";
 import { ensureAuthenticated, validateMiddleware } from "./helpers";
 
@@ -32,6 +37,10 @@ export const dateString = (dateNum: number): string => {
   let dd: number = date.getDate();
 
   return [date.getFullYear(), (mm > 9 ? "" : "0") + mm, (dd > 9 ? "" : "0") + dd].join("/");
+};
+
+const toStartOfTheDay = (date: number): number => {
+  return new Date(new Date(date).toDateString()).valueOf();
 };
 
 const daysToMiliSeconds = (days: number): number => {
@@ -79,6 +88,14 @@ router.get("/all-filtered", (req: Request, res: Response) => {
   res.json({
     events: filtered.slice(0, filters.offset || filtered.length),
   });
+});
+
+router.get("/today", (req: Request, res: Response) => {
+  res.send("/today");
+});
+
+router.get("/week", (req: Request, res: Response) => {
+  res.send("/week");
 });
 
 router.get("/by-days/:offset", (req: Request, res: Response) => {
@@ -131,8 +148,56 @@ router.get("/by-hours/:offset", (req: Request, res: Response) => {
       count: sessionsSet.length,
     });
   }
-  console.log(sessionsByHours);
   res.json(sessionsByHours);
+});
+
+router.get("/retention", (req: Request, res: Response) => {
+  const dayZero = +req.query.dayZero;
+  const events: Event[] = getAllEvents();
+
+  const retentionCohort = [];
+  let startingDate: number = toStartOfTheDay(dayZero);
+  let weekNumber = 1;
+  const currentDate: number = toStartOfTheDay(new Date().valueOf()) + daysToMiliSeconds(1);
+
+  const getOneWeek = (startDate: number, week: number): weeklyRetentionObject => {
+    let endDate = startDate + daysToMiliSeconds(7);
+    const startingIds: string[] = events
+      .filter(
+        (event: Event) => event.name === "signup" && event.date >= startDate && event.date < endDate
+      )
+      .map((event: Event): string => event.distinct_user_id);
+    const startAndEndDates: number[] = [startDate, endDate];
+    startDate = endDate;
+    endDate += daysToMiliSeconds(7);
+
+    const oneWeekResult: number[] = [100];
+
+    while (startDate < currentDate) {
+      oneWeekResult.push(getReturningUsersAmountInWeekInPercent(startDate, endDate, startingIds));
+      startDate = endDate;
+      endDate += daysToMiliSeconds(7);
+    }
+
+    const weekObj: weeklyRetentionObject = {
+      registrationWeek: week,
+      newUsers: startingIds.length,
+      weeklyRetention: oneWeekResult,
+      start: dateString(startAndEndDates[0]),
+      end: dateString(startAndEndDates[1]),
+    };
+    return weekObj;
+  };
+
+  while (startingDate < currentDate) {
+    retentionCohort.push(getOneWeek(startingDate, weekNumber));
+    startingDate += daysToMiliSeconds(7);
+    weekNumber++;
+  }
+
+  console.log(retentionCohort);
+
+  res.json(retentionCohort);
 });
 
 router.get("/today", (req: Request, res: Response) => {
@@ -141,14 +206,6 @@ router.get("/today", (req: Request, res: Response) => {
 
 router.get("/week", (req: Request, res: Response) => {
   res.send("/week");
-});
-
-router.get("/retention", (req: Request, res: Response) => {
-  const { dayZero } = req.query;
-  res.send("/retention");
-});
-router.get("/:eventId", (req: Request, res: Response) => {
-  res.send("/:eventId");
 });
 
 router.post("/", (req: Request, res: Response) => {

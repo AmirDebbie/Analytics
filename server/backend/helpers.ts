@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 import { getUserById } from "./database";
 
 export const ensureAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  //@ts-ignore
   if (req.isAuthenticated()) {
     return next();
   }
@@ -26,6 +27,7 @@ export const validateMiddleware = (validations: any[]) => {
 };
 
 export function AdminValidation(req: Request, res: Response, next: NextFunction) {
+  //@ts-ignore
   const userId = req.session!.passport.user;
   const user = getUserById(userId);
 
