@@ -85,8 +85,19 @@ router.get("/all-filtered", (req: Request, res: Response) => {
     );
   }
 
+  const more = () => {
+    if (!filters.offset) {
+      return false;
+    }
+    if (filters.offset < filtered.length) {
+      return true;
+    }
+    return false;
+  };
+
   res.json({
     events: filtered.slice(0, filters.offset || filtered.length),
+    more: more(),
   });
 });
 

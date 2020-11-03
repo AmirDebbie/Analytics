@@ -1,21 +1,20 @@
 import React, { useState, useCallback, useEffect, memo } from "react";
 import { Resizable } from "re-resizable";
-import { GoogleMap, LoadScript, Marker, InfoWindow, MarkerClusterer } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker, MarkerClusterer } from "@react-google-maps/api";
 import axios from "axios";
 import styled from "styled-components";
 import { Event } from "../models/event";
 import { Loading } from "react-loading-wrapper";
 import LoadingCanvas from "./LoadingCanvas";
 
-const apiKey = "AIzaSyA1jO5KCUbo5ifKHb4LK5ilBN2Fp0NZb5Y";
+const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0";
 const GoogleMapsTile = () => {
-  const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
+  const [, setMap] = useState<google.maps.Map | undefined>(undefined);
   const [events, setEvents] = useState<Event[] | undefined>(undefined);
   const [filter, setFilter] = useState<string>("signup");
   const [loading, setLoading] = useState<boolean>(true);
 
   const getFilteredMap = useCallback(async () => {
-    console.log("filtering", filter);
     setLoading(true);
     const { data: filteredEvents } = await axios.get(
       `http://localhost:3001/events/all-filtered?type=${filter}`
@@ -26,7 +25,7 @@ const GoogleMapsTile = () => {
 
   useEffect(() => {
     getFilteredMap();
-  }, [filter]);
+  }, [filter, getFilteredMap]);
 
   const onUnmount = useCallback(() => {
     setMap(undefined);
@@ -84,7 +83,7 @@ const GoogleMapsTile = () => {
                 {Array.isArray(events) && (
                   <MarkerClusterer>
                     {(clusterer) =>
-                      events.map((event) => (
+                      events.map((event: Event) => (
                         <Marker
                           key={event._id}
                           position={event.geolocation.location}
@@ -122,15 +121,12 @@ const Select = styled.select`
   cursor: pointer;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  /* transition: background-color 200ms;
-
-  &:hover {
-    background-color: rgb(72, 92, 207);
-  } */
 `;
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   box-shadow: 5px 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   width: 100%;
   height: 100%;
+  padding: 10px;
+  border-radius: 5px;
 `;
