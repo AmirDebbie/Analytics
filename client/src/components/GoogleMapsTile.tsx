@@ -42,7 +42,7 @@ const GoogleMapsTile = () => {
     lng: 34,
   };
   const mapStyle = {
-    height: "calc(100% - 40px)",
+    height: "calc(100% - 73px)",
     width: "100%",
     borderBottomLeftRadius: "5px",
     borderBottomRightRadius: "5px",
@@ -59,11 +59,12 @@ const GoogleMapsTile = () => {
       >
         <Loading loadingComponent={<LoadingCanvas />} loading={loading}>
           <Wrapper>
+            <H2>Locations Of Events</H2>
             <Select onChange={(e) => setFilter(e.target.value)}>
-              <option value={"signup"}>sign up events</option>
-              <option value={"admin"}>admin events</option>
-              <option value={"login"}>login events</option>
-              <option value={"/"}>/ events</option>
+              <option value={"signup"}>Sign Up Events</option>
+              <option value={"admin"}>Admin Events</option>
+              <option value={"login"}>Login Events</option>
+              <option value={"/"}>/ Events</option>
             </Select>
             <LoadScript googleMapsApiKey={apiKey} loadingElement={LoadingCanvas}>
               <GoogleMap
@@ -129,4 +130,13 @@ export const Wrapper = styled.div`
   height: 100%;
   padding: 10px;
   border-radius: 5px;
+`;
+
+export const H2 = styled.h2`
+  color: rgb(63, 81, 181);
+
+  font-size: 19px;
+  padding: 5px;
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans;
 `;

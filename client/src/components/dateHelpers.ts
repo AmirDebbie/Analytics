@@ -16,5 +16,5 @@ export function convertDateToString(date: number) {
 export function getOffset(date: string): number {
   const offsetInDate = new Date(date).valueOf();
   const now = getStartOfDay(new Date().valueOf());
-  return (now - offsetInDate) / (1000 * 60 * 60 * 24);
+  return (now - offsetInDate) / (1000 * 60 * 60 * 24) + 1;
 }

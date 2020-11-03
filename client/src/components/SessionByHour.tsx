@@ -14,7 +14,7 @@ import axios from "axios";
 import LoadingCanvas from "./LoadingCanvas";
 import TextField from "@material-ui/core/TextField";
 import { convertDateToString, getOffset, today } from "./dateHelpers";
-import { Wrapper } from "./GoogleMapsTile";
+import { Wrapper, H2 } from "./GoogleMapsTile";
 
 interface HourSessions {
   hour: string;
@@ -49,6 +49,7 @@ const SessionsByHours = () => {
     >
       <Loading loadingComponent={<LoadingCanvas />} loading={!sessions}>
         <Wrapper>
+          <H2>Sessions By Hours In a Single Day</H2>
           <TextField
             label="Date"
             type="date"
@@ -56,15 +57,16 @@ const SessionsByHours = () => {
             InputProps={{
               inputProps: { min: "2020-05-01", max: convertDateToString(today) },
             }}
+            defaultValue={convertDateToString(today)}
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,
             }}
           />
-          <div style={{ height: "calc(100% - 50px)", width: "100%" }}>
+          <div style={{ height: "calc(100% - 70px)", width: "100%" }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={sessions} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <Line type="monotone" dataKey="count" stroke="#8884d8" name="This Day" />
+                <Line type="monotone" dataKey="count" stroke="#8884d8" name="Sessions" />
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                 <XAxis dataKey="hour" />
                 <YAxis />

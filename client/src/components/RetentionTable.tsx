@@ -14,7 +14,7 @@ import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 import { TableBody } from "@material-ui/core";
 import { v4 as uuidv4 } from "uuid";
-import { Wrapper } from "./GoogleMapsTile";
+import { Wrapper, H2 } from "./GoogleMapsTile";
 
 const calcUsersPercentage = (
   data?: weeklyRetentionObject[]
@@ -46,7 +46,7 @@ const calcUsersPercentage = (
 
 export default function RetentionTable() {
   const [retention, setRetention] = useState<weeklyRetentionObject[]>([]);
-  const [offset, setOffset] = useState<number>(new Date().valueOf());
+  const [offset, setOffset] = useState<number>(today);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setOffset(new Date(event.target.value).valueOf());
   };
@@ -62,8 +62,8 @@ export default function RetentionTable() {
 
   return (
     <Resizable
-      minWidth="300px"
-      minHeight="200px"
+      minWidth="400px"
+      minHeight="230px"
       defaultSize={{
         width: "33vw",
         height: "40vh",
@@ -72,6 +72,7 @@ export default function RetentionTable() {
       {retention && (
         <Loading loading={retention.length === 0} loadingComponent={<LoadingCanvas />}>
           <Wrapper>
+            <H2>Retention Cohort</H2>
             <TextField
               label="Date"
               type="date"
@@ -79,12 +80,13 @@ export default function RetentionTable() {
               InputProps={{
                 inputProps: { min: "2020-05-01", max: convertDateToString(today) },
               }}
+              defaultValue={convertDateToString(today)}
               onChange={handleChange}
               InputLabelProps={{
                 shrink: true,
               }}
             />
-            <TableContainer style={{ width: "100%", height: "calc(100% - 50px)" }}>
+            <TableContainer style={{ width: "100%", height: "calc(100% - 90px)" }}>
               <Table size="small" style={{ border: "1px solid #DDDDDD" }}>
                 <TableHead>
                   <TableRow style={{ background: "#f1f1f1" }}>

@@ -140,7 +140,13 @@ router.get("/by-days/:offset", (req: Request, res: Response) => {
     };
     i++;
   }
-  res.json(arrResult);
+
+  res.json(
+    arrResult.sort(
+      (item1: { date: string; count: number }, item2: { date: string; count: number }) =>
+        new Date(item1.date).valueOf() - new Date(item2.date).valueOf()
+    )
+  );
 });
 
 router.get("/by-hours/:offset", (req: Request, res: Response) => {

@@ -62,6 +62,7 @@
     "re-resizable": "^6.7.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-grid-layout": "^1.1.1",
     "react-infinite-calendar": "2.3.1",
     "react-loading-wrapper": "^1.1.1",
     "react-number-format": "4.4.1",
