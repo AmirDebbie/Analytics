@@ -130,6 +130,7 @@ export const Wrapper = styled.div`
   height: 100%;
   padding: 10px;
   border-radius: 5px;
+  position: relative;
 `;
 
 export const H2 = styled.h2`

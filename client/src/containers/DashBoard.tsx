@@ -6,6 +6,7 @@ import GoogleMapsTile from "../components/GoogleMapsTile";
 import RetentionTable from "../components/RetentionTable";
 import SessionsByDay from "../components/SessionByDay";
 import SessionsByHours from "../components/SessionByHour";
+import EventLog from "../components/EventLog";
 import styled from "styled-components";
 
 export interface Props {
@@ -27,6 +28,11 @@ const DashBoard: React.FC = () => {
       <ErrorBoundry>
         <RetentionTable />
       </ErrorBoundry>
+      <div style={{ gridColumn: "1/3" }}>
+        <ErrorBoundry>
+          <EventLog />
+        </ErrorBoundry>
+      </div>
     </Grid>
   );
 };

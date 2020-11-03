@@ -57,10 +57,11 @@ router.get("/all-filtered", (req: Request, res: Response) => {
   let filtered: Event[] = getAllEvents();
 
   if (filters.search) {
+    const reg = new RegExp(filters.search, "i");
     filtered = filtered.filter((event: Event) =>
       Object.values(event).some((value: string | number | GeoLocation) => {
         if (typeof value === "string" || typeof value === "number")
-          return value.toString().toLowerCase().includes(filters.search.toLowerCase());
+          return reg.test(value.toString());
       })
     );
   }
