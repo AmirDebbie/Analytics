@@ -16,6 +16,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Geocode from "react-geocode";
 import { Wrapper, H2 } from "./GoogleMapsTile";
 import { convertDateToString } from "./dateHelpers";
+import { v4 as uuidv4 } from "uuid";
 
 // Api key for google Geocode API
 const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0";
@@ -201,7 +202,7 @@ export default function EventLog() {
                 {eventsToShow &&
                   eventsToShow.map((event, index) => {
                     return (
-                      <div className={classes.root}>
+                      <div key={uuidv4()} className={classes.root}>
                         <Accordion
                           expanded={expanded === `panel${index}`}
                           onChange={handleChange(`panel${index}`)}

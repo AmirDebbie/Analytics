@@ -9,11 +9,18 @@ import LoadingCanvas from "./LoadingCanvas";
 
 const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0";
 
+interface LatLng {
+  lat: number;
+  lng: number;
+}
+
 const GoogleMapsTile = () => {
   const [, setMap] = useState<google.maps.Map | undefined>(undefined);
   const [events, setEvents] = useState<Event[] | undefined>(undefined);
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [zoom, setZoom] = useState<number>(2);
+  const [center, setCenter] = useState<LatLng>({ lat: 0, lng: 0 });
 
   // Gets events from server by type filter
   const getEvents = useCallback(async () => {
@@ -33,7 +40,20 @@ const GoogleMapsTile = () => {
 
   useEffect(() => {
     getEvents();
+    if (events) {
+      setTimeout(() => {
+        setCenter({ lat: 31, lng: 34 });
+        setZoom(zoom === 1 ? 1.01 : 1);
+      }, 500);
+    }
   }, [filter, getEvents]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCenter({ lat: 31, lng: 34 });
+      setZoom(zoom === 1 ? 1.01 : 1);
+    }, 4000);
+  }, []);
 
   // When Map is unmounted
   const onUnmount = useCallback(() => {
@@ -45,13 +65,6 @@ const GoogleMapsTile = () => {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
     setMap(map);
-  }, []);
-
-  const center = useMemo(() => {
-    return {
-      lat: 31,
-      lng: 34,
-    };
   }, []);
 
   const mapStyle = useMemo(() => {
@@ -85,7 +98,7 @@ const GoogleMapsTile = () => {
             <LoadScript googleMapsApiKey={apiKey} loadingElement={LoadingCanvas}>
               <GoogleMap
                 mapContainerStyle={mapStyle}
-                zoom={1}
+                zoom={zoom}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
                 center={center}
