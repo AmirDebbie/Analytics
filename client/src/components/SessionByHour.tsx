@@ -42,7 +42,7 @@ const SessionsByHours = () => {
 
   return (
     <Resizable
-      minWidth="300px"
+      minWidth="380px"
       minHeight="200px"
       defaultSize={{
         width: "33vw",

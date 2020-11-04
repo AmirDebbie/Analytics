@@ -93,12 +93,12 @@ const MainLayout: React.FC<Props> = ({ children, notificationsService, authServi
         <Container maxWidth="md" className={classes.container}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-      {children}
-      </Grid>
+              {children}
+            </Grid>
           </Grid>
         </Container>
         <footer>
-      <Footer />
+          <Footer />
         </footer>
       </main>
     </>
