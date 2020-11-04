@@ -25,7 +25,7 @@ import { isWithinInterval } from "date-fns";
 import low from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
 import shortid from "shortid";
-import { dateString } from "./event-routes";
+import { convertDateToString } from "./event-routes";
 import {
   BankAccount,
   Transaction,
@@ -108,25 +108,30 @@ export const seedDatabase = () => {
   return;
 };
 
+// Gets all events from db
 export const getAllEvents = () => db.get(EVENT_TABLE).value();
 
+// Adds new Event to db
 export const createNewEvent = (event: Event) => {
   db.get(EVENT_TABLE).push(event).write();
 };
 
+// Returns all unique sessions from the received date and hour
 export const getAllSessionsByDateAndHour = (date: number, hour: number): string[] =>
   db
     .get(EVENT_TABLE)
     .value()
     .filter((event: Event) => {
       return (
-        dateString(event.date) === dateString(date) && new Date(event.date).getHours() === hour
+        convertDateToString(event.date) === convertDateToString(date) &&
+        new Date(event.date).getHours() === hour
       );
     })
     .map((event: Event) => event.session_id);
 
 export const getAllUsers = () => db.get(USER_TABLE).value();
 
+// Return number (in percentage) of returning users from the received users array in the week (startDate - endDate)
 export const getReturningUsersAmountInWeekInPercent = (
   startDate: number,
   endDate: number,

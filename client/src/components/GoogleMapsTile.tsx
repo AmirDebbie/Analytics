@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, memo } from "react";
+import React, { useState, useCallback, useEffect, memo, useMemo } from "react";
 import { Resizable } from "re-resizable";
 import { GoogleMap, LoadScript, Marker, MarkerClusterer } from "@react-google-maps/api";
 import axios from "axios";
@@ -8,45 +8,60 @@ import { Loading } from "react-loading-wrapper";
 import LoadingCanvas from "./LoadingCanvas";
 
 const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0";
+
 const GoogleMapsTile = () => {
   const [, setMap] = useState<google.maps.Map | undefined>(undefined);
   const [events, setEvents] = useState<Event[] | undefined>(undefined);
-  const [filter, setFilter] = useState<string>("signup");
+  const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
-  const getFilteredMap = useCallback(async () => {
+  // Gets events from server by type filter
+  const getEvents = useCallback(async () => {
     setLoading(true);
-    const { data: filteredEvents } = await axios.get(
-      `http://localhost:3001/events/all-filtered?type=${filter}`
-    );
-    setEvents(filteredEvents.events);
-    setLoading(false);
+    if (filter.length > 0) {
+      const { data: filteredEvents } = await axios.get(
+        `http://localhost:3001/events/all-filtered?type=${filter}`
+      );
+      setEvents(filteredEvents.events);
+      setLoading(false);
+    } else {
+      const { data: filteredEvents } = await axios.get(`http://localhost:3001/events/all`);
+      setEvents(filteredEvents);
+      setLoading(false);
+    }
   }, [filter]);
 
   useEffect(() => {
-    getFilteredMap();
-  }, [filter, getFilteredMap]);
+    getEvents();
+  }, [filter, getEvents]);
 
+  // When Map is unmounted
   const onUnmount = useCallback(() => {
     setMap(undefined);
   }, []);
 
+  // When map is loaded
   const onLoad = useCallback((map) => {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
     setMap(map);
   }, []);
 
-  const center = {
-    lat: 31,
-    lng: 34,
-  };
-  const mapStyle = {
-    height: "calc(100% - 73px)",
-    width: "100%",
-    borderBottomLeftRadius: "5px",
-    borderBottomRightRadius: "5px",
-  };
+  const center = useMemo(() => {
+    return {
+      lat: 31,
+      lng: 34,
+    };
+  }, []);
+
+  const mapStyle = useMemo(() => {
+    return {
+      height: "calc(100% - 73px)",
+      width: "100%",
+      borderBottomLeftRadius: "5px",
+      borderBottomRightRadius: "5px",
+    };
+  }, []);
   return (
     <>
       <Resizable
@@ -61,15 +76,16 @@ const GoogleMapsTile = () => {
           <Wrapper>
             <H2>Locations Of Events</H2>
             <Select onChange={(e) => setFilter(e.target.value)}>
-              <option value={"signup"}>Sign Up Events</option>
-              <option value={"admin"}>Admin Events</option>
-              <option value={"login"}>Login Events</option>
-              <option value={"/"}>/ Events</option>
+              <option value="">All Events</option>
+              <option value="signup">Sign Up Events</option>
+              <option value="pageView">PageView Events</option>
+              <option value="admin">Admin Events</option>
+              <option value="login">Login Events</option>
             </Select>
             <LoadScript googleMapsApiKey={apiKey} loadingElement={LoadingCanvas}>
               <GoogleMap
                 mapContainerStyle={mapStyle}
-                zoom={0.1}
+                zoom={1}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
                 center={center}
@@ -135,7 +151,6 @@ export const Wrapper = styled.div`
 
 export const H2 = styled.h2`
   color: rgb(63, 81, 181);
-
   font-size: 19px;
   padding: 5px;
   margin: 0;

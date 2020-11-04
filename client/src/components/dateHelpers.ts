@@ -1,9 +1,12 @@
-export function getStartOfDay(dateNow: number): number {
-  const startOfDay = new Date(dateNow).setHours(0, 0, 0);
-  return startOfDay;
+// Gets a date in milliseconds and return the beginning of the same date in milliseconds.
+export function getStartOfDay(date: number): number {
+  return new Date(new Date(date).toDateString()).valueOf();
 }
+
+// Returns current date in milliseconds
 export const today = new Date().valueOf();
 
+// Gets a date in milliseconds and returns it in yyyy-mm-dd format
 export function convertDateToString(date: number) {
   let today = new Date(date);
   const dd = String(today.getDate()).padStart(2, "0");
@@ -13,6 +16,7 @@ export function convertDateToString(date: number) {
   return `${generatedDate}`;
 }
 
+// Gets a date (string) and returns the offset in days from the current date
 export function getOffset(date: string): number {
   const offsetInDate = new Date(date).valueOf();
   const now = getStartOfDay(new Date().valueOf());

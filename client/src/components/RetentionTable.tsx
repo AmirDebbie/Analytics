@@ -16,6 +16,7 @@ import { TableBody } from "@material-ui/core";
 import { v4 as uuidv4 } from "uuid";
 import { Wrapper, H2 } from "./GoogleMapsTile";
 
+// Gets data of retention table and returns both the full number of new users in the table and the combined percentages for each week
 const calcUsersPercentage = (
   data?: weeklyRetentionObject[]
 ): { allUsers: number; percentageArray: number[] } => {
@@ -47,10 +48,13 @@ const calcUsersPercentage = (
 export default function RetentionTable() {
   const [retention, setRetention] = useState<weeklyRetentionObject[]>([]);
   const [offset, setOffset] = useState<number>(today);
+
+  // Handle change of date input
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setOffset(new Date(event.target.value).valueOf());
   };
 
+  // Gets retention table data from server
   const getRetention = useCallback(async (offset: number) => {
     const { data } = await axios.get(`http://localhost:3001/events/retention?dayZero=${offset}`);
     setRetention(data);

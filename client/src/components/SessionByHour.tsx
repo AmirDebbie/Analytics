@@ -25,6 +25,7 @@ const SessionsByHours = () => {
   const [sessions, setSessions] = useState<HourSessions[] | undefined>(undefined);
   const [offset, setOffset] = useState<number>(0);
 
+  // Gets all events by hour sessions from server
   const getSessions = useCallback(async () => {
     const { data } = await axios.get(`http://localhost:3001/events/by-hours/${offset}`);
     setSessions(data);
@@ -34,6 +35,7 @@ const SessionsByHours = () => {
     getSessions();
   }, [offset, getSessions]);
 
+  // Handle change of date input
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setOffset(Math.floor(getOffset(event.target.value)));
   };

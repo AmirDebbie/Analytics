@@ -1,7 +1,7 @@
 import React from "react";
 import { Interpreter } from "xstate";
 import { AuthMachineContext, AuthMachineEvents } from "../machines/authMachine";
-import ErrorBoundry from "../components/ErrorBoundry";
+import ErrorBoundary from "../components/ErrorBoundary";
 import GoogleMapsTile from "../components/GoogleMapsTile";
 import RetentionTable from "../components/RetentionTable";
 import SessionsByDay from "../components/SessionByDay";
@@ -16,23 +16,23 @@ export interface Props {
 const DashBoard: React.FC = () => {
   return (
     <Grid>
-      <ErrorBoundry>
+      <ErrorBoundary>
         <GoogleMapsTile />
-      </ErrorBoundry>
-      <ErrorBoundry>
+      </ErrorBoundary>
+      <ErrorBoundary>
         <SessionsByDay />
-      </ErrorBoundry>
-      <ErrorBoundry>
+      </ErrorBoundary>
+      <ErrorBoundary>
         <SessionsByHours />
-      </ErrorBoundry>
-      <ErrorBoundry>
+      </ErrorBoundary>
+      <ErrorBoundary>
         <RetentionTable />
-      </ErrorBoundry>
-      <div style={{ gridColumn: "1/3" }}>
-        <ErrorBoundry>
+      </ErrorBoundary>
+      <EventLogWrapper>
+        <ErrorBoundary>
           <EventLog />
-        </ErrorBoundry>
-      </div>
+        </ErrorBoundary>
+      </EventLogWrapper>
     </Grid>
   );
 };
@@ -41,11 +41,19 @@ export default DashBoard;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-gap: 30px;
   justify-items: center;
 
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
+  }
+`;
+
+const EventLogWrapper = styled.div`
+  grid-column: 1/3;
+
+  @media (max-width: 1100px) {
+    grid-column: 1;
   }
 `;

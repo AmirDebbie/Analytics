@@ -15,17 +15,11 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Geocode from "react-geocode";
 import { Wrapper, H2 } from "./GoogleMapsTile";
+import { convertDateToString } from "./dateHelpers";
+
+// Api key for google Geocode API
 const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0";
 Geocode.setApiKey(apiKey);
-
-function convertDateToString(date: number) {
-  let today = new Date(date);
-  const dd = String(today.getDate()).padStart(2, "0");
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const yyyy = today.getFullYear();
-  const generatedDate = `${yyyy}/${mm}/${dd}`;
-  return `${generatedDate}`;
-}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,15 +54,18 @@ export default function EventLog() {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
+  // Handle open and close for accordions
   const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  // Handles infinity scroll loader
   const handleLoad = () => {
     setEventsToShow(events!.slice(0, current + 10));
     setCurrent((prev) => prev + 10);
   };
 
+  // Takes an array of events and converts the geoLocation to actual address string (or null if address is not found)
   const getUserLocation = useCallback(async (data: Event[]) => {
     let events: Event[] = await Promise.all(
       data.map(async (event: Event) => {
@@ -88,6 +85,7 @@ export default function EventLog() {
     setEventsToShow(events.slice(0, 10));
   }, []);
 
+  // Gets events from server
   const getEvents = useCallback(async () => {
     let query = `?sorting=${sort}`;
     if (type !== "all") {
