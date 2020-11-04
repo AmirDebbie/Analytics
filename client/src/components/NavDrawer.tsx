@@ -15,6 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
+import TimelineIcon from "@material-ui/icons/Timeline";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import { Grid, Avatar, Typography } from "@material-ui/core";
@@ -79,6 +80,19 @@ export const mainListItems = (
         <NotificationsIcon />
       </ListItemIcon>
       <ListItemText primary="Notifications" />
+    </ListItem>
+    <ListItem
+      button
+      // @ts-ignore
+      onClick={() => showTemporaryDrawer && toggleDrawer()}
+      component={RouterLink}
+      to="/admin"
+      data-test="sidenav-bankaccounts"
+    >
+      <ListItemIcon>
+        <TimelineIcon />
+      </ListItemIcon>
+      <ListItemText primary="Analytics" />
     </ListItem>
   </div>
 );
