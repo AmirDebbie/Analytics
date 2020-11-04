@@ -19,7 +19,6 @@ const LoadingCanvas = ({ size, color }: CanvasProps) => {
     }
 
     const ctx = canvas?.getContext("2d");
-
     const draw = () => {
       const outerRadius: number = size / 5;
       const innerRadius: number = size / 6;
@@ -66,7 +65,7 @@ const LoadingCanvas = ({ size, color }: CanvasProps) => {
 
 LoadingCanvas.defaultProps = {
   size: 300,
-  color: "#53B2E6",
+  color: " rgb(63, 81, 181)",
 };
 
 export default LoadingCanvas;

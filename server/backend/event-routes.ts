@@ -75,8 +75,9 @@ router.get("/all-filtered", (req: Request, res: Response) => {
   }
 
   if (filters.sorting) {
+    console.log(filters.sorting);
     filtered.sort((firstEvent: Event, secondEvent: Event) =>
-      filters.sorting === "+date"
+      filters.sorting !== "-date"
         ? firstEvent.date - secondEvent.date
         : secondEvent.date - firstEvent.date
     );

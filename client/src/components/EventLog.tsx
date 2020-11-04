@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Resizable } from "re-resizable";
 import { Loading } from "react-loading-wrapper";
 import LoadingCanvas from "./LoadingCanvas";
 import styled from "styled-components";
@@ -57,34 +56,20 @@ export default function EventLog() {
   const [searchInput, setSearchInput] = useState<string>("");
   const [type, setType] = useState<string>("all");
   const [browser, setBrowser] = useState<string>("all");
-  const [sort, setSort] = useState<string>("+date");
+  const [sort, setSort] = useState<string>("-date");
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState<string | false>(false);
+
   const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
+
   const handleLoad = () => {
     setEventsToShow(events!.slice(0, current + 10));
     setCurrent((prev) => prev + 10);
   };
-  const getEvents = async () => {
-    let query = `?sorting=${sort}`;
-    if (type !== "all") {
-      query += `&type=${type}`;
-    }
-    if (browser !== "all") {
-      query += `&browser=${browser}`;
-    }
-    if (searchInput.length > 0) {
-      query += `&search=${searchInput}`;
-    }
-    const { data } = await axios.get(`http://localhost:3001/events/all-filtered${query}`);
-    // setEventsToShow(data.events.slice(0, 10));
-    getUserLocation(data.events);
-    setCurrent(10);
-  };
 
-  const getUserLocation = async (data: Event[]) => {
+  const getUserLocation = useCallback(async (data: Event[]) => {
     let events: Event[] = await Promise.all(
       data.map(async (event: Event) => {
         try {
@@ -101,20 +86,38 @@ export default function EventLog() {
     );
     setEvents(events);
     setEventsToShow(events.slice(0, 10));
-  };
+  }, []);
+
+  const getEvents = useCallback(async () => {
+    let query = `?sorting=${sort}`;
+    if (type !== "all") {
+      query += `&type=${type}`;
+    }
+    if (browser !== "all") {
+      query += `&browser=${browser}`;
+    }
+    if (searchInput.length > 0) {
+      query += `&search=${searchInput}`;
+    }
+    const { data } = await axios.get(`http://localhost:3001/events/all-filtered${query}`);
+    // setEventsToShow(data.events.slice(0, 10));
+    getUserLocation(data.events);
+    setCurrent(10);
+  }, [getUserLocation, browser, sort, type, searchInput]);
 
   useEffect(() => {
     getEvents();
-  }, [sort, searchInput, type, browser]);
+  }, [sort, searchInput, type, browser, getEvents]);
 
   return (
-    <div style={{ width: "67vw", height: "360px" }}>
+    <div style={{ width: "67vw", height: "400px" }}>
       <Wrapper>
+        <H2>Event Log</H2>
         <Loading loadingComponent={<LoadingCanvas />} loading={!events}>
           <Grid>
             <div>
               <TextField
-                label="Search"
+                label="Search Events"
                 value={searchInput}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
                   setSearchInput(e.target.value)
@@ -150,8 +153,8 @@ export default function EventLog() {
                 variant="outlined"
                 helperText="Please select how you want to sort Your Events"
               >
-                <MenuItem value="+date">Newest To Oldest</MenuItem>
-                <MenuItem value="-date">Oldest To Newest</MenuItem>
+                <MenuItem value="-date">Newest To Oldest</MenuItem>
+                <MenuItem value="+date">Oldest To Newest</MenuItem>
               </TextField>
               <br />
               <br />
