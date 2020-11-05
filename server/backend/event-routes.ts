@@ -106,7 +106,7 @@ router.get("/by-days/:offset", (req: Request, res: Response) => {
 
   let filtered: Event[] = events.filter((event) => endDate <= event.date && startDate > event.date);
 
-  let result: any = {};
+  let result: { [key: string]: string[] } = {};
   for (let event of filtered) {
     if (result[convertDateToString(event.date)]) {
       if (
