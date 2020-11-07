@@ -46,14 +46,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function EventLog() {
   const [events, setEvents] = useState<undefined | Event[]>(undefined);
-  const [eventsToShow, setEventsToShow] = useState<undefined | Event[]>(undefined);
+  //const [eventsToShow, setEventsToShow] = useState<undefined | Event[]>(undefined);
   const [current, setCurrent] = useState<number>(0);
   const [searchInput, setSearchInput] = useState<string>("");
   const [type, setType] = useState<string>("all");
   const [browser, setBrowser] = useState<string>("all");
   const [sort, setSort] = useState<string>("-date");
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState<string | false>(false);
+  const [expanded, setExpanded] = useState<string | false>(false);
+  const [more, setMore] = useState<boolean>(false);
 
   // Handle open and close for accordions
   const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
@@ -61,8 +62,21 @@ export default function EventLog() {
   };
 
   // Handles infinity scroll loader
-  const handleLoad = () => {
-    setEventsToShow(events!.slice(0, current + 10));
+  const handleLoad = async () => {
+    let query = `?sorting=${sort}`;
+    if (type !== "all") {
+      query += `&type=${type}`;
+    }
+    if (browser !== "all") {
+      query += `&browser=${browser}`;
+    }
+    if (searchInput.length > 0) {
+      query += `&search=${searchInput}`;
+    }
+    query += `&offset=${current + 10}`;
+    const { data } = await axios.get(`http://localhost:3001/events/all-filtered${query}`);
+    getUserLocation(data.events);
+    setMore(data.more);
     setCurrent((prev) => prev + 10);
   };
 
@@ -83,10 +97,8 @@ export default function EventLog() {
       })
     );
     setEvents(events);
-    setEventsToShow(events.slice(0, 10));
   }, []);
 
-  // Gets events from server
   const getEvents = useCallback(async () => {
     let query = `?sorting=${sort}`;
     if (type !== "all") {
@@ -98,9 +110,10 @@ export default function EventLog() {
     if (searchInput.length > 0) {
       query += `&search=${searchInput}`;
     }
+    query += `&offset=10`;
     const { data } = await axios.get(`http://localhost:3001/events/all-filtered${query}`);
-    // setEventsToShow(data.events.slice(0, 10));
     getUserLocation(data.events);
+    setMore(data.more);
     setCurrent(10);
   }, [getUserLocation, browser, sort, type, searchInput]);
 
@@ -188,10 +201,10 @@ export default function EventLog() {
               }}
             >
               <InfiniteScroll
-                dataLength={eventsToShow ? eventsToShow.length : 0}
+                dataLength={events ? events.length : 0}
                 next={handleLoad}
                 scrollableTarget="scrollableDiv"
-                hasMore={events ? current < events.length : false}
+                hasMore={more}
                 loader={<h4>Loading...</h4>}
                 endMessage={
                   <p style={{ textAlign: "center" }}>
@@ -199,8 +212,8 @@ export default function EventLog() {
                   </p>
                 }
               >
-                {eventsToShow &&
-                  eventsToShow.map((event, index) => {
+                {events &&
+                  events.map((event, index) => {
                     return (
                       <div key={uuidv4()} className={classes.root}>
                         <Accordion

@@ -7,6 +7,8 @@ import RetentionTable from "../components/RetentionTable";
 import SessionsByDay from "../components/SessionByDay";
 import SessionsByHours from "../components/SessionByHour";
 import EventLog from "../components/EventLog";
+import PageViews from "../components/PageViews";
+import OsChart from "../components/OsChart";
 import styled from "styled-components";
 
 export interface Props {
@@ -29,6 +31,12 @@ const DashBoard: React.FC = () => {
         </ErrorBoundary>
         <ErrorBoundary>
           <RetentionTable />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <OsChart />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <PageViews />
         </ErrorBoundary>
         <EventLogWrapper>
           <ErrorBoundary>

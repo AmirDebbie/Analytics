@@ -43,7 +43,7 @@ const GoogleMapsTile = () => {
     if (events) {
       setTimeout(() => {
         setCenter({ lat: 31, lng: 34 });
-        setZoom(zoom === 1 ? 1.01 : 1);
+        setZoom((prev) => (prev === 1 ? 1.01 : 1));
       }, 500);
     }
   }, [filter, getEvents]);
@@ -51,7 +51,7 @@ const GoogleMapsTile = () => {
   useEffect(() => {
     setTimeout(() => {
       setCenter({ lat: 31, lng: 34 });
-      setZoom(zoom === 1 ? 1.01 : 1);
+      setZoom((prev) => (prev === 1 ? 1.01 : 1));
     }, 4000);
   }, []);
 
