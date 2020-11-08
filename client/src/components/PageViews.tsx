@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  Legend,
-} from "recharts";
+import { CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { Wrapper, H2 } from "./GoogleMapsTile";
 import { Resizable } from "re-resizable";
 import axios from "axios";

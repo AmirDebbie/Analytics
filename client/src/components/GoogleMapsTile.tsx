@@ -7,7 +7,7 @@ import { Event } from "../models/event";
 import { Loading } from "react-loading-wrapper";
 import LoadingCanvas from "./LoadingCanvas";
 
-const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0";
+const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0"; // Api key unfortunately not working (trial over) so map wont fully work.
 
 interface LatLng {
   lat: number;

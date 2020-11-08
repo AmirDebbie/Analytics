@@ -19,7 +19,7 @@ import { convertDateToString } from "./dateHelpers";
 import { v4 as uuidv4 } from "uuid";
 
 // Api key for google Geocode API
-const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0";
+const apiKey = "AIzaSyAy7WH4vuy7VrxbmHR3-eoBJkdIKf8rCw0"; // Api key unfortunately not working (trial over) so no addresses will appear.
 Geocode.setApiKey(apiKey);
 
 const useStyles = makeStyles((theme: Theme) =>
