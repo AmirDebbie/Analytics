@@ -27,4 +27,10 @@ you can use `npm run init` __in the project root__ to download both the client a
 - /server
     - `npm run db:seed` - reseed the database (does not affect tests.) you can determine different parameters in [.env](server/.env). Useful in case the existing data is has very old dates and you want newer entries, or add properties you want to the data.
 
+## Pictures
+<br/>
+<img width='800' src='./pictures/Screenshot 2020-11-10 135209.png'>
+<img width='800' src='./pictures/Screenshot 2020-11-10 135237.png'>
+<img width='800' src='./pictures/Screenshot 2020-11-10 135324.png'>
+<img width='800' src='./pictures/Screenshot 2020-11-10 135420.png'>
 
